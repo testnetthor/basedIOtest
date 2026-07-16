@@ -1,22 +1,27 @@
-name: Aggiungi commits
+name: Commit Automatici
 
 on:
   workflow_dispatch:
 
 jobs:
-  update:
+  commit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Forza aggiornamento
+      - name: Forza commit
         run: |
-          echo "Commit eseguito il $(date -u)" >> log.txt
-          echo "Numero: $RANDOM" >> log.txt
+          echo "Commit del $(date -u +'%Y-%m-%d %H:%M:%S')" > commit.txt
+          echo "Numero random: $RANDOM" >> commit.txt
           
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           
-          git add log.txt
-          git commit -m "Update $(date -u)" --allow-empty
+          git add commit.txt
+          git commit -m "Auto commit $(date -u)" --allow-empty
           git push
