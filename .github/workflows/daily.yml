@@ -1,27 +1,27 @@
-name: Commit Automatici
+name: Multi Commit
 
 on:
   workflow_dispatch:
 
 jobs:
-  commit:
+  multi-commit:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Forza commit
+      - name: Crea 5 commits
         run: |
-          echo "Commit del $(date -u +'%Y-%m-%d %H:%M:%S')" > commit.txt
-          echo "Numero random: $RANDOM" >> commit.txt
-          
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           
-          git add commit.txt
-          git commit -m "Auto commit $(date -u)" --allow-empty
+          for i in {1..5}
+          do
+            echo "Commit $i del $(date -u)" >> multi-log.txt
+            git add multi-log.txt
+            git commit -m "Auto commit $i - $(date -u)" --allow-empty
+          done
+          
           git push
