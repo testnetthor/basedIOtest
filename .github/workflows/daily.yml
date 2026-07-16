@@ -9,13 +9,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Aggiorna file
+      - name: Forza aggiornamento
         run: |
-          echo "$(date -u +'%Y-%m-%d %H:%M:%S') - Commit numero $(git rev-list --count HEAD)" >> commits.log
+          echo "Commit eseguito il $(date -u)" >> log.txt
+          echo "Numero: $RANDOM" >> log.txt
           
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           
-          git add commits.log
-          git commit -m "Daily update $(date -u)" || echo "No changes to commit"
-          git push || echo "Push failed"
+          git add log.txt
+          git commit -m "Update $(date -u)" --allow-empty
+          git push
